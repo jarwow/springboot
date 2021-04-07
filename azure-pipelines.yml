@@ -10,8 +10,6 @@ resources:
 
 variables:
   tag: '$(Build.BuildId)'
-
-variables:
   ImageName: 'jarwow/ado-image:$(Build.BuildId)'  
 
 stages:
