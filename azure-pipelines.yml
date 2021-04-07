@@ -1,33 +1,3 @@
-Skip to content
-Search or jump to…
-
-Pull requests
-Issues
-Marketplace
-Explore
- 
-@jarwow 
-WolfgangOfner
-/
-.NetCoreMicroserviceCiCdAks
-1
-06
-Code
-Issues
-Pull requests
-Actions
-Projects
-Wiki
-Security
-Insights
-.NetCoreMicroserviceCiCdAks/Docker-CI.yml
-
-Wolfgang added docker CI pipeline
-Latest commit c3e5328 on Sep 16, 2020
- History
- 0 contributors
-39 lines (35 sloc)  1016 Bytes
-  
 name : Docker-CI
 trigger:
   branches:
