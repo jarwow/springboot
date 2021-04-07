@@ -1,44 +1,70 @@
-# Docker
-# Build a Docker image
-# https://docs.microsoft.com/azure/devops/pipelines/languages/docker
+Skip to content
+Search or jump to…
 
+Pull requests
+Issues
+Marketplace
+Explore
+ 
+@jarwow 
+WolfgangOfner
+/
+.NetCoreMicroserviceCiCdAks
+1
+06
+Code
+Issues
+Pull requests
+Actions
+Projects
+Wiki
+Security
+Insights
+.NetCoreMicroserviceCiCdAks/Docker-CI.yml
+
+Wolfgang added docker CI pipeline
+Latest commit c3e5328 on Sep 16, 2020
+ History
+ 0 contributors
+39 lines (35 sloc)  1016 Bytes
+  
+name : Docker-CI
 trigger:
-- main
+  branches:
+    include:
+      - master
 
-resources:
-- repo: self
+pool:
+  vmImage: 'ubuntu-latest'
 
 variables:
-  tag: '$(Build.BuildId)'
-  ImageName: 'jarwow/ado-image:$(Build.BuildId)'  
+  ImageName: 'jarwow/ado-image:$(Build.BuildId)'
 
 stages:
 - stage: Build
   displayName: Build image
-  jobs:
+  jobs:  
   - job: Build
-    displayName: Build
-    pool:
-      vmImage: ubuntu-latest
+    displayName: Build and push Docker image
     steps:
     - task: Docker@1
-      displayName: Build an image
+      displayName: 'Build the Docker image'
       inputs:
-        command: build
-        dockerfile: '$(Build.SourcesDirectory)/Dockerfile'
         containerregistrytype: 'Container Registry'
-        dockerRegistryEndpoint: 'Docker Hub'      
+        dockerRegistryEndpoint: 'Docker Hub'
+        command: 'Build an image'
+        dockerFile: '**/Dockerfile'
         imageName: '$(ImageName)'
         includeLatestTag: true
         useDefaultContext: false
-        buildContext: '.'          
-        tags: |
-          $(tag)
-    - task: Docker@2
+        buildContext: '.'
+    
+    - task: Docker@1
       displayName: 'Push the Docker image to Dockerhub'
       inputs:
         containerregistrytype: 'Container Registry'
         dockerRegistryEndpoint: 'Docker Hub'
         command: 'Push an image'
         imageName: '$(ImageName)'
-      condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest')) 
+      condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
+
