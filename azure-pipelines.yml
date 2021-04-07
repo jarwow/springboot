@@ -21,7 +21,7 @@ stages:
     pool:
       vmImage: ubuntu-latest
     steps:
-    - task: Docker@2
+    - task: Docker@1
       displayName: Build an image
       inputs:
         command: build
@@ -34,3 +34,11 @@ stages:
         buildContext: '.'          
         tags: |
           $(tag)
+    - task: Docker@2
+      displayName: 'Push the Docker image to Dockerhub'
+      inputs:
+        containerregistrytype: 'Container Registry'
+        dockerRegistryEndpoint: 'Docker Hub'
+        command: 'Push an image'
+        imageName: '$(ImageName)'
+      condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest')) 
