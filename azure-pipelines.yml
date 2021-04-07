@@ -1,0 +1,38 @@
+# Docker
+# Build a Docker image
+# https://docs.microsoft.com/azure/devops/pipelines/languages/docker
+
+trigger:
+- main
+
+resources:
+- repo: self
+
+variables:
+  tag: '$(Build.BuildId)'
+
+variables:
+  ImageName: 'jarwow/ado-image:$(Build.BuildId)'  
+
+stages:
+- stage: Build
+  displayName: Build image
+  jobs:
+  - job: Build
+    displayName: Build
+    pool:
+      vmImage: ubuntu-latest
+    steps:
+    - task: Docker@2
+      displayName: Build an image
+      inputs:
+        command: build
+        dockerfile: '$(Build.SourcesDirectory)/Dockerfile'
+        containerregistrytype: 'Container Registry'
+        dockerRegistryEndpoint: 'Docker Hub'      
+        imageName: '$(ImageName)'
+        includeLatestTag: true
+        useDefaultContext: false
+        buildContext: '.'          
+        tags: |
+          $(tag)
